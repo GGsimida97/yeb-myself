@@ -18,48 +18,48 @@ public class RespBean {
     private Object obj;
 
     /**
-     * @description:成功返回结果
      * @param msg
-            * @return: com.wangjf.server.pojo.RespBean
-            * @author: Joker
-            * @time: 2022/1/3 20:23
+     * @description:成功返回结果
+     * @return: com.wangjf.server.pojo.RespBean
+     * @author: Joker
+     * @time: 2022/1/3 20:23
      */
-    public static RespBean success(String msg){
-        return new RespBean(200,msg,null);
+    public static RespBean success(String msg) {
+        return new RespBean(200, msg, null);
     }
 
     /**
-     * @description:成功返回结果
      * @param msg
- * @param obj
-            * @return: com.wangjf.server.pojo.RespBean
-            * @author: Joker
-            * @time: 2022/1/3 20:24
+     * @param obj
+     * @description:成功返回结果
+     * @return: com.wangjf.server.pojo.RespBean
+     * @author: Joker
+     * @time: 2022/1/3 20:24
      */
-    public static RespBean success(String msg, Object obj){
-        return new RespBean(200,msg,obj);
+    public static RespBean success(String msg, Object obj) {
+        return new RespBean(200, msg, obj);
     }
 
     /**
+     * @param msg
      * @description: 失败返回结果
-     * @param msg
-            * @return: com.wangjf.server.pojo.RespBean
-            * @author: Joker
-            * @time: 2022/1/3 20:25
+     * @return: com.wangjf.server.pojo.RespBean
+     * @author: Joker
+     * @time: 2022/1/3 20:25
      */
-    public static RespBean error(String msg){
-        return new RespBean(500,msg,null);
+    public static RespBean error(String msg) {
+        return new RespBean(500, msg, null);
     }
 
     /**
-     * @description:失败返回结果
      * @param msg
- * @param obj
-            * @return: com.wangjf.server.pojo.RespBean
-            * @author: Joker
-            * @time: 2022/1/3 20:26
+     * @param obj
+     * @description:失败返回结果
+     * @return: com.wangjf.server.pojo.RespBean
+     * @author: Joker
+     * @time: 2022/1/3 20:26
      */
-    public static RespBean error(String msg,Object obj){
-        return new RespBean(500,msg,obj);
+    public static RespBean error(String msg, Object obj) {
+        return new RespBean(500, msg, obj);
     }
 }
