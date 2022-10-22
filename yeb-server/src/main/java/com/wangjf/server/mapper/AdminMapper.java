@@ -15,13 +15,5 @@ import java.util.List;
  * @since 2022-01-02
  */
 public interface AdminMapper extends BaseMapper<Admin> {
-    /**
-     * @description:通过用户id查询菜单列表
-     * @param id
-            * @return: java.util.List<com.wangjf.server.pojo.Menu>
-            * @author: Joker
-            * @time: 2022/1/9 13:31
-     */
 
-    List<Menu> selectMenusByAdminId(Integer id);
 }

@@ -2,12 +2,31 @@ server:
   port: 8081
 
 spring:
+  #数据源配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: "jdbc:mysql://localhost:3306/yeb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
     username: root
     password: wang1997
+#redis配置
+  redis:
+    # 超时时间
+    timeout: 10000ms
+    # 服务器地址
+    host: localhost
+    port: 6379
+    database: 0
+    lettuce:
+      pool:
+        # 最大连接数 默认是8
+        max-active: 1024
+        # 最大连接阻塞等待时间，默认是-1
+        max-wait: 10000ms
+        # 最大空闲连接
+        max-idle: 200
+        # 最小空闲连接
+        min-idle: 5
 
 
 #配置mybatis-plus (注意:任何我们需要在classpath：前缀中获取的资源都必须在target->classes文件夹中找到，否则将出现java.io.FileNotFoundException的错误信息。)

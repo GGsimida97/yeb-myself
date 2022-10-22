@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.soap.SAAJResult;
 import java.util.HashMap;
@@ -104,18 +105,5 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public Admin getAdminInfoByUserName(String userName) {
         return adminMapper.selectOne(new QueryWrapper<Admin>().eq("username", userName).eq("enabled", true));
-    }
-
-    /**
-     * @param
-     * @description:通过用户id获取菜单列表
-     * @return: java.util.List<com.wangjf.server.pojo.Menu>
-     * @author: Joker
-     * @time: 2022/1/9 13:25
-     */
-    @Override
-    public List<Menu> getMenusByAdminId() {
-        return adminMapper.selectMenusByAdminId(((Admin) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal()).getId());
     }
 }
