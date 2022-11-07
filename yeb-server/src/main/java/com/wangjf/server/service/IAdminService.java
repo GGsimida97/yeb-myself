@@ -1,9 +1,11 @@
 package com.wangjf.server.service;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.wangjf.server.pojo.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wangjf.server.pojo.Menu;
 import com.wangjf.server.pojo.RespBean;
+import com.wangjf.server.pojo.Role;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -39,12 +41,10 @@ public interface IAdminService extends IService<Admin> {
      */
     Admin getAdminInfoByUserName(String userName);
 
-//    /**
-//     * @param
-//     * @description:通过用户id获取菜单列表
-//     * @return: java.util.List<com.wangjf.server.pojo.Menu>
-//     * @author: Joker
-//     * @time: 2022/1/9 13:24
-//     */
-//    List<Menu> getMenusByAdminId();
+    /**
+     * 根据用户id查询角色列表
+     * @param adminId
+     * @return
+     */
+    List<Role> getRoles(Integer adminId);
 }

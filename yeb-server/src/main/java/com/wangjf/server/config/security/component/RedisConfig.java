@@ -1,4 +1,4 @@
-package com.wangjf.server.config.security;
+package com.wangjf.server.config.security.component;
 
 import com.baomidou.mybatisplus.extension.api.R;
 import org.springframework.context.annotation.Bean;

@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,10 +35,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         // 先从redis获取菜单数据
         List<Menu> menus = (List<Menu>) valueOperations.get("menu_" + adminId);
-        if (menus == null) {
+        if (CollectionUtils.isEmpty(menus)) {
             menus = menuMapper.getMenusByAdminId(adminId);
             valueOperations.set("menu_" + adminId, menus);
         }
         return menus;
+    }
+
+    @Override
+    /**
+     * 根据角色获取菜单列表
+     */
+    public List<Menu> getMenusWithRole() {
+        return menuMapper.getMenusWithRole();
     }
 }

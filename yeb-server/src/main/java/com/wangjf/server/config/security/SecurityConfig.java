@@ -1,21 +1,23 @@
 package com.wangjf.server.config.security;
 
+import com.wangjf.server.config.security.component.*;
 import com.wangjf.server.pojo.Admin;
 import com.wangjf.server.service.impl.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -27,11 +29,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Lazy
-    AdminServiceImpl adminService;
+    private AdminServiceImpl adminService;
     @Autowired
-    RestAuthenticationEntryPoint authenticationEntryPoint;//未登录
+    private RestAuthenticationEntryPoint authenticationEntryPoint;//未登录
     @Autowired
-    RestfulAccessDeniedHandler accessDeniedHandler;//未授权
+    private RestfulAccessDeniedHandler accessDeniedHandler;//未授权
+
+    @Autowired
+    private CustomFilter customFilter;
+    @Autowired
+    private CustomUrlDecisionManager customUrlDecisionManager;
 
     /**
      * @param web
@@ -41,8 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @time: 2022/1/8 14:19
      */
     @Override
+
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(     "/login",
+        web.ignoring().antMatchers("/login",
                 "/logout",
                 "/ws/**",
                 "/css/**",
@@ -75,12 +83,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-             /*   //不拦截的请求
-                .antMatchers("/login", "/logout")
-                .permitAll()
-                //除了上面，其他请求都得进行拦截认证*/
+                /*   //不拦截的请求
+                   .antMatchers("/login", "/logout")
+                   .permitAll()
+                   //除了上面，其他请求都得进行拦截认证*/
                 .anyRequest()
                 .authenticated()
+                // 动态权限配置
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(customUrlDecisionManager);
+                        o.setSecurityMetadataSource(customFilter);
+                        return o;
+                    }
+                })
                 .and()
                 //禁用缓存
                 .headers()
@@ -100,8 +117,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * @param auth
-     * @description:执行自定义的认证登录（就是重写了原本AuthenticationManagerBuilder类调用UserDetailsService接口的loadUserByUsername方法
-     * 以及使得AuthenticationManagerBuilder类调用PasswordEncoder接口的BCryptPasswordEncoder实现类）
+     * @description:执行自定义的认证登录（就是重写了原本AuthenticationManagerBuilder类调用UserDetailsService接口的loadUserByUsername方法 以及使得AuthenticationManagerBuilder类调用PasswordEncoder接口的BCryptPasswordEncoder实现类）
      * @return: void
      * @author: Joker
      * @time: 2022/1/6 16:48
@@ -122,11 +138,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-           Admin admin = adminService.getAdminInfoByUserName(username);
+            Admin admin = adminService.getAdminInfoByUserName(username);
             if (admin != null) {
+                admin.setRoles(adminService.getRoles(admin.getId()));
                 return admin;
             }
-            return null;
+            throw new UsernameNotFoundException("用户名或密码不正确");
         };
     }
 

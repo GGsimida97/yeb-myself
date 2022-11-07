@@ -1,4 +1,4 @@
-package com.wangjf.server.config.security;
+package com.wangjf.server.config.security.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wangjf.server.pojo.RespBean;

@@ -67,4 +67,8 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "子菜单")
     @TableField(exist = false)//表明表字段中没有children
     private List<Menu> children;
+
+    @ApiModelProperty(value = "角色列表")
+    @TableField(exist = false)
+    private List<Role> roles;
 }

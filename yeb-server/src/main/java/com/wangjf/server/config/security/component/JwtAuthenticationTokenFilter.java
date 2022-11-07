@@ -1,4 +1,4 @@
-package com.wangjf.server.config.security;
+package com.wangjf.server.config.security.component;
 
 import com.wangjf.server.config.jwt.JwtTokenUtil;
 import com.wangjf.server.service.impl.AdminServiceImpl;
@@ -16,6 +16,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
 
 
         //这边就获取到 Bearer<token>....
