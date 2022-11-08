@@ -11,8 +11,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * <p>
@@ -23,7 +22,9 @@ import lombok.EqualsAndHashCode;
  * @since 2022-01-02
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = false, of = "name")
 @TableName("t_position")
 @ApiModel(value="Position对象", description="")
 public class Position implements Serializable {
@@ -36,6 +37,7 @@ public class Position implements Serializable {
 
     @ApiModelProperty(value = "职位")
     @Excel(name = "职位")
+    @NonNull
     private String name;
 
     @ApiModelProperty(value = "创建时间")
