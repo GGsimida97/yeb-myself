@@ -2,4 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wangjf.server.mapper.MenuRoleMapper">
 
+    <!--    通过查询映射结果-->
+    <resultMap id="BaseResultMap" type="com.wangjf.server.pojo.MenuRole">
+        <id column="id" property="id"/>
+        <result column="mid" property="mid"/>
+        <result column="rid" property="rid"/>
+    </resultMap>
+
+    <!--    通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, mid, rid
+    </sql>
+
+<!--    更新角色菜单 批量插入-->
+    <insert id="insertRecords">
+        insert into t_menu_role(mid, rid) values
+        <foreach collection="mids" item="mid" separator=",">
+           (#{mid}, #{rid})
+        </foreach>
+    </insert>
 </mapper>
