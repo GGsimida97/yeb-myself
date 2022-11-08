@@ -54,9 +54,9 @@ public class Employee implements Serializable {
     @Excel(name = "婚姻状况")
     private String wedlock;
 
-//    @ApiModelProperty(value = "民族")
-//    @TableField("nationId")
-//    private Integer nationid;
+    @ApiModelProperty(value = "民族")
+    @TableField("nationId")
+    private Integer nationid;
 
     @ApiModelProperty(value = "民族")
     @TableField(exist = false)
@@ -68,9 +68,9 @@ public class Employee implements Serializable {
     @TableField("nativePlace")
     private String nativeplace;
 
-//    @ApiModelProperty(value = "政治面貌")
-//    @TableField("politicId")
-//    private Integer politicid;
+    @ApiModelProperty(value = "政治面貌")
+    @TableField("politicId")
+    private Integer politicid;
 
     @ApiModelProperty(value = "政治面貌")
     @TableField(exist = false)
@@ -89,25 +89,25 @@ public class Employee implements Serializable {
     @Excel(name = "联系地址", width = 40)
     private String address;
 
-//    @ApiModelProperty(value = "所属部门")
-//    @TableField("departmentId")
-//    private Integer departmentid;
+    @ApiModelProperty(value = "所属部门")
+    @TableField("departmentId")
+    private Integer departmentid;
     @ApiModelProperty(value = "所属部门")
     @TableField(exist = false)
     @ExcelEntity(name = "部门")
     private Department department;
 
-//    @ApiModelProperty(value = "职称ID")
-//    @TableField("jobLevelId")
-//    private Integer joblevelid;
+    @ApiModelProperty(value = "职称ID")
+    @TableField("jobLevelId")
+    private Integer joblevelid;
     @ApiModelProperty(value = "职称")
     @TableField(exist = false)
     @ExcelEntity(name = "职称")
     private Joblevel joblevel;
 
-//    @ApiModelProperty(value = "职位ID")
-//    @TableField("posId")
-//    private Integer posid;
+    @ApiModelProperty(value = "职位ID")
+    @TableField("posId")
+    private Integer posid;
     @ApiModelProperty(value = "职位")
     @TableField(exist = false)
     @ExcelEntity(name = "职位")
