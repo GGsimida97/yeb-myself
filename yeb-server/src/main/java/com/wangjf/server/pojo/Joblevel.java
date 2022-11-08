@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -40,6 +42,7 @@ public class Joblevel implements Serializable {
 
     @ApiModelProperty(value = "创建时间")
     @TableField("createDate")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Aisa/Shanghai")
     private LocalDateTime createdate;
 
     @ApiModelProperty(value = "是否启用")
