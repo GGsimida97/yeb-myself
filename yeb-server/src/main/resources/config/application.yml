@@ -53,4 +53,12 @@ jwt:
   # Jwt负载中拿到开头
   tokenHead: Bearer
 
+#  rabbitmq:
+#    username: guest
+#    password: guest
+#    host: 39.102.65.157
+#    port: 5672
+#    listener:
+#      simple:
+#        acknowledge-mode: manual
 

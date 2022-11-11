@@ -4,57 +4,57 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.wangjf.server.pojo.Employee">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="gender" property="gender" />
-        <result column="birthday" property="birthday" />
-        <result column="idCard" property="idcard" />
-        <result column="wedlock" property="wedlock" />
-        <result column="nationId" property="nationid" />
-        <result column="nativePlace" property="nativeplace" />
-        <result column="politicId" property="politicid" />
-        <result column="email" property="email" />
-        <result column="phone" property="phone" />
-        <result column="address" property="address" />
-        <result column="departmentId" property="departmentid" />
-        <result column="jobLevelId" property="joblevelid" />
-        <result column="posId" property="posid" />
-        <result column="engageForm" property="engageform" />
-        <result column="tiptopDegree" property="tiptopdegree" />
-        <result column="specialty" property="specialty" />
-        <result column="school" property="school" />
-        <result column="beginDate" property="begindate" />
-        <result column="workState" property="workstate" />
-        <result column="workID" property="workid" />
-        <result column="contractTerm" property="contractterm" />
-        <result column="conversionTime" property="conversiontime" />
-        <result column="notWorkDate" property="notworkdate" />
-        <result column="beginContract" property="begincontract" />
-        <result column="endContract" property="endcontract" />
-        <result column="workAge" property="workage" />
-        <result column="salaryId" property="salaryid" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="idCard" property="idcard"/>
+        <result column="wedlock" property="wedlock"/>
+        <result column="nationId" property="nationid"/>
+        <result column="nativePlace" property="nativeplace"/>
+        <result column="politicId" property="politicid"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="departmentId" property="departmentid"/>
+        <result column="jobLevelId" property="joblevelid"/>
+        <result column="posId" property="posid"/>
+        <result column="engageForm" property="engageform"/>
+        <result column="tiptopDegree" property="tiptopdegree"/>
+        <result column="specialty" property="specialty"/>
+        <result column="school" property="school"/>
+        <result column="beginDate" property="begindate"/>
+        <result column="workState" property="workstate"/>
+        <result column="workID" property="workid"/>
+        <result column="contractTerm" property="contractterm"/>
+        <result column="conversionTime" property="conversiontime"/>
+        <result column="notWorkDate" property="notworkdate"/>
+        <result column="beginContract" property="begincontract"/>
+        <result column="endContract" property="endcontract"/>
+        <result column="workAge" property="workage"/>
+        <result column="salaryId" property="salaryid"/>
     </resultMap>
 
     <resultMap id="EmployeeInfo" type="com.wangjf.server.pojo.Employee" extends="BaseResultMap">
         <association property="nation" javaType="com.wangjf.server.pojo.Nation">
-            <id column="nid" property="id" />
-            <result column="nname" property="name" />
+            <id column="nid" property="id"/>
+            <result column="nname" property="name"/>
         </association>
         <association property="politicsStatus" javaType="com.wangjf.server.pojo.PoliticsStatus">
-            <id column="pid" property="id" />
-            <result column="pname" property="name" />
+            <id column="pid" property="id"/>
+            <result column="pname" property="name"/>
         </association>
         <association property="department" javaType="com.wangjf.server.pojo.Department">
-            <id column="did" property="id" />
-            <result column="dname" property="name" />
+            <id column="did" property="id"/>
+            <result column="dname" property="name"/>
         </association>
         <association property="joblevel" javaType="com.wangjf.server.pojo.Joblevel">
-            <id column="jid" property="id" />
-            <result column="jname" property="name" />
+            <id column="jid" property="id"/>
+            <result column="jname" property="name"/>
         </association>
         <association property="position" javaType="com.wangjf.server.pojo.Position">
-            <id column="posid" property="id" />
-            <result column="posname" property="name" />
+            <id column="posid" property="id"/>
+            <result column="posname" property="name"/>
         </association>
     </resultMap>
 
@@ -83,8 +83,11 @@
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, gender, birthday, idcard, wedlock, nationid, nativeplace, politicId, email, phone, address, departmentid, jobLevelid, posid, engageform, tiptopdegree, specialty, school, begindate, workstate, workid, contractterm, conversiontime, notworkdate, begincontract, endcontract, workage, salaryid
+        id
+        , name, gender, birthday, idcard, wedlock, nationid, nativeplace, politicId, email, phone, address, departmentid, jobLevelid, posid, engageform, tiptopdegree, specialty, school, begindate, workstate, workid, contractterm, conversiontime, notworkdate, begincontract, endcontract, workage, salaryid
     </sql>
+
+    <!--添加员工-->
 
     <!--获取所有员工（分页）-->
     <select id="getEmployeeByPage" resultMap="EmployeeInfo">
@@ -125,7 +128,7 @@
         <if test="employee.jobLevelId != null">
             AND e.jobLevelId = #{employee.jobLevelId}
         </if>
-        <if test="employee.posId != null" >
+        <if test="employee.posId != null">
             AND e.posId = #{employee.posId}
         </if>
         <if test="employee.departmentId != null">
@@ -174,60 +177,58 @@
 
     <!--获取所有员工套账-->
     <select id="getEmployeeWithSalary" resultMap="EmployeeWithSalary">
-        SELECT
-            e.*,
-            td.`name` as dname,
-            s.id AS sid,
-            s.`name` AS sname,
-            s.basicSalary AS sbasicSalary,
-            s.trafficSalary AS strafficSalary,
-            s.lunchSalary AS slunchSalary,
-            s.bonus AS sbonus,
-            s.allSalary AS sallSalary,
-            s.pensionPer AS spensionPer,
-            s.pensionBase AS spensionBase,
-            s.medicalPer AS smedicalPer,
-            s.medicalBase AS smedicalBase,
-            s.accumulationFundPer AS saccumulationFundPer,
-            s.accumulationFundBase AS saccumulationFundBase
-        FROM
-            t_employee as e
-                LEFT JOIN t_salary as s ON e.salaryId = s.id
-                LEFT JOIN t_department as td ON e.departmentId = td.id
+        SELECT e.*,
+               td.`name`              as dname,
+               s.id                   AS sid,
+               s.`name`               AS sname,
+               s.basicSalary          AS sbasicSalary,
+               s.trafficSalary        AS strafficSalary,
+               s.lunchSalary          AS slunchSalary,
+               s.bonus                AS sbonus,
+               s.allSalary            AS sallSalary,
+               s.pensionPer           AS spensionPer,
+               s.pensionBase          AS spensionBase,
+               s.medicalPer           AS smedicalPer,
+               s.medicalBase          AS smedicalBase,
+               s.accumulationFundPer  AS saccumulationFundPer,
+               s.accumulationFundBase AS saccumulationFundBase
+        FROM t_employee as e
+                 LEFT JOIN t_salary as s ON e.salaryId = s.id
+                 LEFT JOIN t_department as td ON e.departmentId = td.id
         ORDER BY e.id
     </select>
 
-<!--    查询员工-->
+    <!--    查询员工-->
     <select id="getEmployee" resultMap="EmployeeInfo">
         SELECT
-            e.*,
-            n.id AS nid,
-            n.NAME AS nname,
-            p.id AS pid,
-            p.NAME AS pname,
-            d.id AS did,
-            d.NAME AS dname,
-            j.id AS jid,
-            j.NAME AS jname,
-            pos.id AS posid,
-            pos.NAME AS posname
+        e.*,
+        n.id AS nid,
+        n.NAME AS nname,
+        p.id AS pid,
+        p.NAME AS pname,
+        d.id AS did,
+        d.NAME AS dname,
+        j.id AS jid,
+        j.NAME AS jname,
+        pos.id AS posid,
+        pos.NAME AS posname
         FROM
-            t_employee e,
-            t_nation n,
-            t_politics_status p,
-            t_department d,
-            t_joblevel j,
-            t_position pos
+        t_employee e,
+        t_nation n,
+        t_politics_status p,
+        t_department d,
+        t_joblevel j,
+        t_position pos
         WHERE
-            e.nationId = n.id
-          AND e.politicId = p.id
-          AND e.jobLevelId = j.id
-          AND e.departmentId = d.id
-          AND e.posId = pos.id
-          <if test="null!=id">
-              AND e.id = #{id}
-          </if>
+        e.nationId = n.id
+        AND e.politicId = p.id
+        AND e.jobLevelId = j.id
+        AND e.departmentId = d.id
+        AND e.posId = pos.id
+        <if test="null!=id">
+            AND e.id = #{id}
+        </if>
         ORDER BY
-            e.id
+        e.id
     </select>
 </mapper>

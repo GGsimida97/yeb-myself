@@ -12,11 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -50,6 +47,11 @@ public class EmployeeController {
     @Autowired
     private IPositionService positionService;
 
+    @ApiOperation(value = "添加员工")
+    @PostMapping("/")
+    public RespBean addEmp(@RequestBody Employee employee) {
+        return employeeService.addEmp(employee);
+    }
     @ApiOperation(value = "导出员工数据")
     @GetMapping(value = "/export", produces = "application/octet-stream")
     public void exportEmployee(HttpServletResponse response) {
