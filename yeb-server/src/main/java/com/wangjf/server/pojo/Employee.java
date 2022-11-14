@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -42,6 +44,7 @@ public class Employee implements Serializable {
     private String gender;
 
     @ApiModelProperty(value = "出生日期")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     @Excel(name = "出生日期", width = 20, format = "yyyy-MM-dd")
     private LocalDate birthday;
 
@@ -151,21 +154,25 @@ public class Employee implements Serializable {
     private Double contractterm;
 
     @ApiModelProperty(value = "转正日期")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     @Excel(name = "转正日期", width = 20, format = "yyyy-MM-dd")
     @TableField("conversionTime")
     private LocalDate conversiontime;
 
     @ApiModelProperty(value = "离职日期")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
 //    @Excel(name = "离职日期", width = 20, format = "yyyy-MM-dd")
     @TableField("notWorkDate")
     private LocalDate notworkdate;
 
     @ApiModelProperty(value = "合同起始日期")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     @Excel(name = "合同起始日期", width = 20, format = "yyyy-MM-dd")
     @TableField("beginContract")
     private LocalDate begincontract;
 
     @ApiModelProperty(value = "合同终止日期")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     @Excel(name = "合同终止日期", width = 20, format = "yyyy-MM-dd")
     @TableField("endContract")
     private LocalDate endcontract;

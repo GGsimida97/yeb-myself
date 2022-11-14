@@ -87,6 +87,7 @@
         , name, gender, birthday, idcard, wedlock, nationid, nativeplace, politicId, email, phone, address, departmentid, jobLevelid, posid, engageform, tiptopdegree, specialty, school, begindate, workstate, workid, contractterm, conversiontime, notworkdate, begincontract, endcontract, workage, salaryid
     </sql>
 
+
     <!--添加员工-->
 
     <!--获取所有员工（分页）-->
@@ -94,15 +95,15 @@
         SELECT
         e.*,
         n.id AS nid,
-        n.NAME AS nname,
+        n.name AS nname,
         p.id AS pid,
-        p.NAME AS pname,
+        p.name AS pname,
         d.id AS did,
-        d.NAME AS dname,
+        d.name AS dname,
         j.id AS jid,
-        j.NAME AS jname,
+        j.name AS jname,
         pos.id AS posid,
-        pos.NAME AS posname
+        pos.name AS posname
         FROM
         t_employee e,
         t_nation n,

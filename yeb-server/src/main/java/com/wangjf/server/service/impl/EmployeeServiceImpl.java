@@ -1,8 +1,11 @@
 package com.wangjf.server.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangjf.server.pojo.Employee;
 import com.wangjf.server.mapper.EmployeeMapper;
 import com.wangjf.server.pojo.RespBean;
+import com.wangjf.server.pojo.RespPageBean;
 import com.wangjf.server.service.IEmployeeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -61,5 +64,23 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             return RespBean.success("添加成功!");
         }
         return RespBean.error("添加失败");
+    }
+
+    /**
+     * 获取所有员工（分页）
+     * @param currentPage
+     * @param size
+     * @param employee
+     * @param beginDateScope
+     * @return
+     */
+
+    @Override
+    public RespPageBean getEmployeeByPage(Integer currentPage, Integer size, Employee employee, LocalDate[] beginDateScope) {
+        // 开启分页
+        Page<Employee> page =  new Page<>(currentPage, size);
+        IPage<Employee> employeeByPage = employeeMapper.getEmployeeByPage(page, employee, beginDateScope);
+        RespPageBean respPageBean = new RespPageBean(employeeByPage.getSize(), employeeByPage.getRecords());
+        return respPageBean;
     }
 }

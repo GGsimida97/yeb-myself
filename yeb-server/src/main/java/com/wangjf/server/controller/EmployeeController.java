@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ import java.util.List;
  * @since 2022-01-02
  */
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employee/basic")
 public class EmployeeController {
     @Autowired
     private IEmployeeService employeeService;
@@ -47,6 +48,14 @@ public class EmployeeController {
     @Autowired
     private IPositionService positionService;
 
+
+    @ApiOperation(value = "获取所有员工(分页)")
+    @GetMapping("/")
+    public RespPageBean getEmployee(@RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size,
+                                Employee employee, LocalDate[] beginDateScope) {
+        return employeeService.getEmployeeByPage(currentPage, size, employee, beginDateScope);
+
+    }
     @ApiOperation(value = "添加员工")
     @PostMapping("/")
     public RespBean addEmp(@RequestBody Employee employee) {

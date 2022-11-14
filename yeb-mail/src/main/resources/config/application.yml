@@ -10,14 +10,15 @@ spring:
     password: kwwoxyktvmacdjab
     username: 2431975848@qq.com
     port: 465
-#  rabbitmq:
-#    username: guest
-#    password: guest
-#    host: 39.102.65.157
-#    port: 5672
-#    listener:
-#      simple:
-#        acknowledge-mode: manual
+  # rabbitMQ
+  rabbitmq:
+    username: guest
+    password: guest
+    host: 127.0.0.1
+    port: 5672
+    listener:
+      simple:
+        acknowledge-mode: manual
   redis:
     timeout: 10000ms
     host: localhost
