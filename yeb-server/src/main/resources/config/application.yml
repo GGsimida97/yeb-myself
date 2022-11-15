@@ -9,24 +9,36 @@ spring:
     url: "jdbc:mysql://localhost:3306/yeb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai"
     username: root
     password: wang1997
-#redis配置
-  redis:
-    # 超时时间
-    timeout: 10000ms
-    # 服务器地址
+  # rabbitMQ配置
+  rabbitmq:
     host: localhost
-    port: 6379
-    database: 0
-    lettuce:
-      pool:
-        # 最大连接数 默认是8
-        max-active: 1024
-        # 最大连接阻塞等待时间，默认是-1
-        max-wait: 10000ms
-        # 最大空闲连接
-        max-idle: 200
-        # 最小空闲连接
-        min-idle: 5
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    # 开启发布确认
+    publisher-confirm-type: correlated
+    # 开启交换机消息回退机制
+    publisher-returns: true
+
+#redis配置
+redis:
+  # 超时时间
+  timeout: 10000ms
+  # 服务器地址
+  host: localhost
+  port: 6379
+  database: 0
+  lettuce:
+    pool:
+      # 最大连接数 默认是8
+      max-active: 1024
+      # 最大连接阻塞等待时间，默认是-1
+      max-wait: 10000ms
+      # 最大空闲连接
+      max-idle: 200
+      # 最小空闲连接
+      min-idle: 5
 
 
 #配置mybatis-plus (注意:任何我们需要在classpath：前缀中获取的资源都必须在target->classes文件夹中找到，否则将出现java.io.FileNotFoundException的错误信息。)
@@ -53,13 +65,6 @@ jwt:
   # Jwt负载中拿到开头
   tokenHead: Bearer
 
-  # rabbitMQ
-  rabbitmq:
-    username: guest
-    password: guest
-    host: 127.0.0.1
-    port: 5672
-    listener:
-      simple:
-        acknowledge-mode: manual
+
+
 
