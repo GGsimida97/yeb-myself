@@ -35,7 +35,7 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         //作者信息
-        Contact contact = new Contact("Joker", "http://localhost:8081/doc.html", "2431975848@qq.com");
+        Contact contact = new Contact("Joker", "http://localhost:8082/doc.html", "2431975848@qq.com");
         return new ApiInfo(
                 "Joker的云E办Api文档",
                 "忠诚不绝对就是绝对不忠诚",

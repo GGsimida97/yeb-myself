@@ -68,7 +68,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         if (1 == employeeMapper.insert(employee)) {
             Employee emp = employeeMapper.getEmployee(employee.getId()).get(0);
             // 首先进行消息落库
-            String msgId = UUID.randomUUID().toString();
+//            String msgId = UUID.randomUUID().toString();
+            String msgId = "789";
             MailLog mailLog = new MailLog();
             mailLog.setCount(0);
             mailLog.setMsgid(msgId);

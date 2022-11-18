@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   # 邮件配置
@@ -10,15 +10,16 @@ spring:
     password: BXTMBECHFSPQDHGQ
     username: wjfjndx2020@163.com
     port: 25
-# rabbitMQ
-rabbitmq:
-  username: guest
-  password: guest
-  host: 127.0.0.1
-  port: 5672
-  listener:
-    simple:
-      acknowledge-mode: manual
+ # rabbitMQ
+  rabbitmq:
+    username: guest
+    password: guest
+    host: 127.0.0.1
+    port: 5672
+    # 开启手动确认
+    listener:
+      simple:
+        acknowledge-mode: manual
 redis:
   timeout: 10000ms
   host: localhost

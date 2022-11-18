@@ -39,9 +39,11 @@ public class RabbitmqConfig {
             if (ack) {
                 log.info("交换机成功收到msgId为{}的消息", msgId);
                 // 更新数据库表mail_log状态为1，表示投递成功
+                // TODO: 2022/11/17 这边没有考虑路由异常的情况！待优化 
                 mailLogService.update(new UpdateWrapper<MailLog>().set("status", 1).eq("msgId", msgId));
             } else {
                 log.error("交换机未收到msgId为{}的消息", msgId);
+                mailLogService.update(new UpdateWrapper<MailLog>().set("status", 2).eq("msgId", msgId));
             }
         });
         /**
@@ -49,6 +51,7 @@ public class RabbitmqConfig {
          */
         rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
             log.error("msgId为{}的消息未被成功路由", message.getBody().toString());
+            // mailLogService.update(new UpdateWrapper<MailLog>().set("status", 2).eq("msgId", message.getMessageProperties().getCorrelationId()));
         });
         return rabbitTemplate;
     }
