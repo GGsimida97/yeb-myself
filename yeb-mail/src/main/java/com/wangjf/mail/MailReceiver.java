@@ -1,9 +1,13 @@
 package com.wangjf.mail;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.rabbitmq.client.Channel;
 import com.wangjf.server.config.rabbitmq.MailConstants;
 import com.wangjf.server.pojo.Employee;
+import com.wangjf.server.pojo.MailLog;
+import com.wangjf.server.service.IMailLogService;
+import com.wangjf.server.service.impl.MailLogServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
@@ -45,6 +50,8 @@ public class MailReceiver {
     private TemplateEngine templateEngine;
     @Autowired
     private RedisTemplate redisTemplate;
+//    @Autowired
+//    private IMailLogService mailLogService;
 //    @Autowired
 //    private StringRedisTemplate stringRedisTemplate;
 
@@ -94,8 +101,18 @@ public class MailReceiver {
             helper.setText(mail, true);
             // 发送邮件
             javaMailSender.send(msg);
+//            System.out.println("==========================>邮件发送成功");
             log.info("邮件发送成功");
             channel.basicAck(tag, false);
+            /**
+             * 更新mail_log中routingStatus、exchangeStatus的状态都为1，表示路由到队列正常
+             * 换个字段
+             */
+            // TODO: 下面三行代码有异常 不能这样操作数据库（空指针异常）
+            IMailLogService mailLogService = new MailLogServiceImpl();
+            mailLogService.update(new UpdateWrapper<MailLog>().set("exchangeStatus", 1).eq("msgId", msgId));
+            mailLogService.update(new UpdateWrapper<MailLog>().set("routingStatus", 1).eq("msgId", msgId));
+
         } catch (Exception e) {
             try {
                 /**
@@ -103,12 +120,12 @@ public class MailReceiver {
                  * multiple：
                  *requeue：是否退回队列
                  */
-                channel.basicNack(tag, false, true);
+                channel.basicNack(tag, false, false);
             } catch (IOException ioException) {
+                log.error("邮件发送失败111===========>{}", ioException.getMessage());
                 ioException.printStackTrace();
-            } finally {
-                LOGGER.error("邮件发送失败===========>{}", e.getMessage());
             }
+            log.error("邮件发送失败222===========>{}",e.getMessage());
         }
     }
 }

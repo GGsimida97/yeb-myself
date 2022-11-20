@@ -68,21 +68,34 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         if (1 == employeeMapper.insert(employee)) {
             Employee emp = employeeMapper.getEmployee(employee.getId()).get(0);
             // 首先进行消息落库
-//            String msgId = UUID.randomUUID().toString();
-            String msgId = "789";
+            String msgId = UUID.randomUUID().toString();
+//            String msgId = "789";
             MailLog mailLog = new MailLog();
             mailLog.setCount(0);
             mailLog.setMsgid(msgId);
-            mailLog.setStatus(0);
+            /**
+             * exchangeStatus：
+             *  1:消息投递到交换机成功
+             *  2:消息投递到交换机失败
+             * routingStatus：
+             *  1:消息成功路由到队列
+             *  2：消息路由到队列失败
+             */
+            // 首先默认全是成功
+            mailLog.setExchangeStatus(1);
+            mailLog.setRoutingStatus(1);
+//            // 默认邮件发送失败
+//            mailLog.setMailStatus(2);
             mailLog.setEid(employee.getId());
             mailLog.setExchange(MailConstants.MAIL_EXCHANGE_NAME);
             mailLog.setRoutekey(MailConstants.MAIL_ROUTING_KEY);
             mailLog.setTrytime(LocalDateTime.now().plusMinutes(MailConstants.MSG_TIMEOUT));
             mailLog.setCreatetime(LocalDateTime.now());
             mailLog.setUpdatetime(LocalDateTime.now());
+            // 先添加一条mailLog
             mailLogMapper.insert(mailLog);
-            // 发送邮件
-            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME,MailConstants.MAIL_ROUTING_KEY, emp, new CorrelationData(msgId));
+            // 再发送邮件
+            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME, MailConstants.MAIL_ROUTING_KEY, emp, new CorrelationData(msgId));
             return RespBean.success("添加成功!");
         }
         return RespBean.error("添加失败");
@@ -90,6 +103,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
     /**
      * 获取所有员工（分页）
+     *
      * @param currentPage
      * @param size
      * @param employee
@@ -100,7 +114,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     @Override
     public RespPageBean getEmployeeByPage(Integer currentPage, Integer size, Employee employee, LocalDate[] beginDateScope) {
         // 开启分页
-        Page<Employee> page =  new Page<>(currentPage, size);
+        Page<Employee> page = new Page<>(currentPage, size);
         IPage<Employee> employeeByPage = employeeMapper.getEmployeeByPage(page, employee, beginDateScope);
         RespPageBean respPageBean = new RespPageBean(employeeByPage.getSize(), employeeByPage.getRecords());
         return respPageBean;

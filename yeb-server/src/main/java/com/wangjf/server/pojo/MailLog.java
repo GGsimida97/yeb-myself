@@ -33,8 +33,14 @@ public class MailLog implements Serializable {
     @ApiModelProperty(value = "接收员工id")
     private Integer eid;
 
-    @ApiModelProperty(value = "状态（0:消息投递中 1:投递成功 2:投递失败）")
-    private Integer status;
+//    @ApiModelProperty(value = "状态（0:消息投递中 1:投递成功 2:投递失败）")
+//    private Integer msgStatus;
+    @ApiModelProperty(value = "状态（1:消息投递到交换机成功 2：1:消息投递到交换机失败）")
+    private Integer exchangeStatus;
+    @ApiModelProperty(value = "状态（1:消息成功路由到队列 2：消息路由到队列失败）")
+    private Integer routingStatus;
+//    @ApiModelProperty(value = "状态（1:邮件发送成功 2：邮件发送失败）")
+//    private Integer mailStatus;
 
     @ApiModelProperty(value = "路由键")
     @TableField("routeKey")

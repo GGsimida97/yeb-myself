@@ -20,6 +20,9 @@ spring:
     publisher-confirm-type: correlated
     # 开启交换机消息回退机制
     publisher-returns: true
+#    # 如果消息没路由到queue，返回信息给消息发送方即ReturnCallback
+#    template:
+#      mandatory: true
 
 #redis配置
 redis:

@@ -9,8 +9,10 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
 
 @Configuration
 @Slf4j
@@ -37,37 +39,47 @@ public class RabbitmqConfig {
         rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
             String msgId = correlationData.getId();
             if (ack) {
-                log.info("交换机成功收到msgId为{}的消息", msgId);
-                // 更新数据库表mail_log状态为1，表示投递成功
-                // TODO: 2022/11/17 这边没有考虑路由异常的情况！待优化 
-                mailLogService.update(new UpdateWrapper<MailLog>().set("status", 1).eq("msgId", msgId));
+                /**
+                 * exchangeStatus：
+                 *  1:消息投递到交换机成功
+                 *  2:消息投递到交换机失败
+                 * routingStatus：
+                 *  1:消息成功路由到队列
+                 *  2:消息路由到队列失败
+                 */
+                log.info("msgId为{}的消息投递到交换机成功", msgId);
+                // 更新数据库表mail_log状态为1，交换机成功收到消息
+//                mailLogService.update(new UpdateWrapper<MailLog>().set("exchangeStatus", 1).eq("msgId", msgId));
             } else {
-                log.error("交换机未收到msgId为{}的消息", msgId);
-                mailLogService.update(new UpdateWrapper<MailLog>().set("status", 2).eq("msgId", msgId));
+                log.error("msgId为{}的消息投递到交换机失败", msgId);
+                mailLogService.update(new UpdateWrapper<MailLog>().set("exchangeStatus", 2).eq("msgId", msgId));
             }
         });
         /**
          * 当交换机成功接收了消息，但是路由到队列时，失败，才会回调
+         * 注意：当交换机成功接收了消息，但是路由到队列时失败时，ReturnCallback会比ConfirmCallback先执行！！！！
          */
         rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
-            log.error("msgId为{}的消息未被成功路由", message.getBody().toString());
-            // mailLogService.update(new UpdateWrapper<MailLog>().set("status", 2).eq("msgId", message.getMessageProperties().getCorrelationId()));
+            String msgId = message.getMessageProperties().getHeader("spring_returned_message_correlation");
+            log.error("msgId为{}的消息未被成功路由", msgId);
+            mailLogService.update(new UpdateWrapper<MailLog>().set("routingStatus", 2).eq("msgId", msgId));
         });
+        rabbitTemplate.setMandatory(true);
         return rabbitTemplate;
     }
 
-    @Bean
+    @Bean("mailQueue")
     public Queue mailQueue() {
         return new Queue(MailConstants.MAIL_QUEUE_NAME);
     }
 
-    @Bean
+    @Bean("mailExchange")
     public DirectExchange mailExchange() {
         return new DirectExchange(MailConstants.MAIL_EXCHANGE_NAME);
     }
 
     @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(mailQueue()).to(mailExchange()).with(MailConstants.MAIL_ROUTING_KEY);
+    public Binding binding(@Qualifier("mailQueue") Queue mailQueue, @Qualifier("mailExchange") DirectExchange mailExchange) {
+        return BindingBuilder.bind(mailQueue).to(mailExchange).with(MailConstants.MAIL_ROUTING_KEY);
     }
 }

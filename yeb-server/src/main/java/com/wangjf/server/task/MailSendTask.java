@@ -28,14 +28,26 @@ public class MailSendTask {
     private IEmployeeService employeeService;
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0/20 * * * * ?")
     public void mailSendTask() {
-        List<MailLog> list = mailLogService.list(new QueryWrapper<MailLog>()
-                .eq("status", 2).lt("tryTime", LocalDateTime.now()));
+        /**
+         * exchangeStatus：
+         *  0:消息还未投递到交换机
+         *  1:消息投递到交换机成功
+         *  2:消息投递到交换机失败
+         * routingStatus：
+         *  0:消息还未被交换机路由
+         *  1:消息成功路由到队列
+         *  2：消息路由到队列失败
+         */
+        QueryWrapper<MailLog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lt("tryTime", LocalDateTime.now());
+        queryWrapper.and(wrapper -> wrapper.eq("exchangeStatus", 2).or().eq("routingStatus", 2));
+        List<MailLog> list = mailLogService.list(queryWrapper);
         list.forEach(mailLog -> {
-            // 如果重试次数超过三次，更新状态为投递失败，不再重试
+            // 如果重试次数超过三次，更新状态为失败，不再重试
             if (3 <= mailLog.getCount()) {
-                mailLogService.update(new UpdateWrapper<MailLog>().set("status", 2)
+                mailLogService.update(new UpdateWrapper<MailLog>().set("exchangeStatus", 2).set("routingStatus", 2)
                         .eq("msgId", mailLog.getMsgid()));
                 return;
             }
